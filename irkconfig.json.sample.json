@@ -1,0 +1,7 @@
+{
+    "template": {
+        "memo": "memo",
+        "target": "192.168.1.141", "format": "raw", "freq": 38,
+        "data": []
+    }
+}
