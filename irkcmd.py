@@ -14,13 +14,13 @@ import requests
 
 g_cmd_data = {}
 
-__version__ = '0.0.2.171127'
+__version__ = '0.0.3.171203'
 
 def irkMain():
     '''
-    メインルーチン
+    Main routine
     '''
-    global g_cmd_data # 設定用データ
+    global g_cmd_data # config global value
 
     argv = sys.argv
     argc = len(argv)
@@ -31,20 +31,25 @@ def irkMain():
 
     cmd = str(argv[1])
 
-    # 設定ファイルの読み込み
+    # loading config
     script_path = os.path.dirname(os.path.abspath(__file__))
     g_cmd_data = loadConfig(os.path.join(script_path, 'irkconfig.json'))
+
+    if(g_cmd_data == ""):
+        print 'config data is empty, please check config file'
+        return False
 
     if (cmd == 'cmdlist'):
         showCmds()
     else:
         execCmdSend(cmd)
 
+    return True
+
 def showCmds():
     '''
-    コマンドの一覧を表示する
+    list commands
     '''
-
     cmd_data = g_cmd_data
 
     print '--cmdlist--'
@@ -55,11 +60,11 @@ def showCmds():
 
 def execCmdSend(cmd):
     '''
-    IRKit にデータを送信する
+    send to IRKit
     '''
     cmd_data = g_cmd_data
 
-    # 設定項目の存在を確認する
+    # check cmd_data
     if(cmd in cmd_data):
 
         target = cmd_data[cmd]['target']
@@ -68,28 +73,31 @@ def execCmdSend(cmd):
         freq = cmd_data[cmd]['freq']
         data = cmd_data[cmd]['data']
         message = {'format': send_format, 'freq': freq, 'data': data}
-        reqUrl = 'http://%s/messages' % (target)
+        req_url = 'http://%s/messages' % (target)
 
-        # リクエストの送信
-        r = requests.post(reqUrl, headers=headers, data=json.dumps(message))
+        # send request
+        r = requests.post(req_url, headers=headers, data=json.dumps(message))
         print r.status_code
 
-    # 設定項目がない場合
+    # when cmd_data is empty
     else:
         print 'cmd not found'
         print 'type: python irkcmd.py cmdlist'
 
-def loadConfig(configFile):
+def loadConfig(config_file):
     '''
-    設定ファイルを読み出す
+    load config form config_file
     '''
-    if (os.path.exists(configFile)):
-        f = open(configFile, 'r')
+    if (os.path.exists(config_file)):
+        f = open(config_file, 'r')
         json_data = json.load(f)
         #print json.dumps(json_data, sort_keys = True, indent = 4)
         f.close()
         return json_data
-    return False
+    else:
+        print 'can not read %s' % config_file
+
+    return ""
 
 if __name__ == '__main__':
     irkMain()
