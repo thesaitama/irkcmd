@@ -14,7 +14,7 @@ import requests
 
 g_cmd_data = {}
 
-__version__ = '0.0.3.171203'
+__version__ = '0.0.4.171224'
 
 def irkMain():
     '''
@@ -35,7 +35,7 @@ def irkMain():
     script_path = os.path.dirname(os.path.abspath(__file__))
     g_cmd_data = loadConfig(os.path.join(script_path, 'irkconfig.json'))
 
-    if(g_cmd_data == ""):
+    if (g_cmd_data == ''):
         print 'config data is empty, please check config file'
         return False
 
@@ -65,7 +65,7 @@ def execCmdSend(cmd):
     cmd_data = g_cmd_data
 
     # check cmd_data
-    if(cmd in cmd_data):
+    if (cmd in cmd_data):
 
         target = cmd_data[cmd]['target']
         headers = {'X-Requested-With': 'curl'}
@@ -97,7 +97,7 @@ def loadConfig(config_file):
     else:
         print 'can not read %s' % config_file
 
-    return ""
+    return ''
 
 if __name__ == '__main__':
     irkMain()
