@@ -3,8 +3,7 @@
 
 # irkcmd.py
 
-"""
-IR Kit CLI Script (local network only)
+""" IR Kit CLI Script (local network only)
 """
 
 import os
@@ -14,13 +13,12 @@ import requests
 
 g_cmd_data = {}
 
-__version__ = '0.0.4.171224'
+__version__ = '0.0.5.180218'
 
 def irkMain():
-    '''
-    Main routine
-    '''
-    global g_cmd_data # config global value
+    """ Main routine
+    """
+    global g_cmd_data  # config global value
 
     argv = sys.argv
     argc = len(argv)
@@ -47,21 +45,20 @@ def irkMain():
     return True
 
 def showCmds():
-    '''
-    list commands
-    '''
+    """ list commands
+    """
     cmd_data = g_cmd_data
 
     print '--cmdlist--'
 
     for cmd in sorted(cmd_data):
         print ('{0:20}: {1:30}'.format(cmd, cmd_data[cmd]['memo']))
-        #print cmd + ': ' + cmdData[cmd]['memo']
+
+    return True
 
 def execCmdSend(cmd):
-    '''
-    send to IRKit
-    '''
+    """ send to IRKit
+    """
     cmd_data = g_cmd_data
 
     # check cmd_data
@@ -78,26 +75,28 @@ def execCmdSend(cmd):
         # send request
         r = requests.post(req_url, headers=headers, data=json.dumps(message))
         print r.status_code
+        return True
 
     # when cmd_data is empty
     else:
         print 'cmd not found'
         print 'type: python irkcmd.py cmdlist'
+        return False
 
 def loadConfig(config_file):
-    '''
-    load config form config_file
-    '''
+    """ load config form config_file
+    """
     if (os.path.exists(config_file)):
         f = open(config_file, 'r')
         json_data = json.load(f)
-        #print json.dumps(json_data, sort_keys = True, indent = 4)
+        # print json.dumps(json_data, sort_keys = True, indent = 4)
         f.close()
         return json_data
     else:
         print 'can not read %s' % config_file
 
     return ''
+
 
 if __name__ == '__main__':
     irkMain()
